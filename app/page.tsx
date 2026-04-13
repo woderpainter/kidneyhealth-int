@@ -19,7 +19,8 @@ import {
   X,
   AlertCircle,
   Droplets,
-  BookOpen
+  BookOpen,
+  ArrowUp
 } from 'lucide-react';
 
 // --- Components ---
@@ -48,9 +49,10 @@ const Navbar = () => {
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
-          <a href="#problem" className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">The Problem</a>
-          <a href="#solution" className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Our Solution</a>
-          <a href="#testimonials" className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Success Stories</a>
+          <a href="#problem" className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Health Risks</a>
+          <a href="#solution" className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">The Guide</a>
+          <a href="#testimonials" className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Testimonials</a>
+          <a href="#free-resources" className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Free Resources</a>
           <a href="#faq" className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">FAQ</a>
           <button className="bg-blue-600 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 active:scale-95">
             Download Guide
@@ -72,9 +74,10 @@ const Navbar = () => {
             exit={{ opacity: 0, y: -20 }}
             className="absolute top-full left-0 right-0 bg-white border-b border-slate-100 p-6 flex flex-col gap-4 md:hidden shadow-xl"
           >
-            <a href="#problem" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-slate-600">The Problem</a>
-            <a href="#solution" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-slate-600">Our Solution</a>
-            <a href="#testimonials" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-slate-600">Success Stories</a>
+            <a href="#problem" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-slate-600">Health Risks</a>
+            <a href="#solution" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-slate-600">The Guide</a>
+            <a href="#testimonials" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-slate-600">Testimonials</a>
+            <a href="#free-resources" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-slate-600">Free Resources</a>
             <a href="#faq" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-slate-600">FAQ</a>
             <button className="bg-blue-600 text-white px-6 py-4 rounded-xl text-lg font-bold hover:bg-blue-700 transition-all">
               Download Guide Now
@@ -146,7 +149,27 @@ const Hero = () => {
                     </button>
                   </div>
                 </form>
-                <p className="mt-4 text-sm text-slate-500 flex items-center gap-2">
+
+                {/* Urgency Progress Bar */}
+                <div className="mt-6 max-w-md">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Today&apos;s Free Copies Claimed</span>
+                    <span className="text-xs font-bold text-blue-600">87%</span>
+                  </div>
+                  <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: "0%" }}
+                      animate={{ width: "87%" }}
+                      transition={{ duration: 2, ease: "easeOut", delay: 0.5 }}
+                      className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"
+                    />
+                  </div>
+                  <p className="mt-2 text-[10px] text-slate-400 italic">
+                    *Limited availability. Only 12 free copies remaining for today.
+                  </p>
+                </div>
+
+                <p className="mt-6 text-sm text-slate-500 flex items-center gap-2">
                   <ShieldCheck size={14} className="text-green-500" />
                   Your privacy is protected. Instant digital delivery.
                 </p>
@@ -467,7 +490,7 @@ const Testimonials = () => {
 
 const LeadMagnet = () => {
   return (
-    <section className="py-24 bg-blue-50">
+    <section id="free-resources" className="py-24 bg-blue-50">
       <div className="max-w-4xl mx-auto px-6 text-center">
         <div className="bg-white p-12 md:p-16 rounded-[48px] shadow-2xl shadow-blue-200/50 border border-white relative overflow-hidden">
           <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-50 rounded-full" />
@@ -625,30 +648,48 @@ const FinalCTA = () => {
             <div className="flex flex-col items-center gap-6">
               <AnimatePresence mode="wait">
                 {!isSubmitted ? (
-                  <motion.form 
-                    key="form"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onSubmit={handleSubmit} 
-                    className="flex flex-col sm:flex-row gap-4 w-full max-w-lg"
-                  >
-                    <div className="flex-1 relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
-                      <input 
-                        type="email" 
-                        placeholder="Your email address" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full pl-12 pr-4 py-5 rounded-2xl bg-white/10 border border-white/20 focus:border-blue-400 outline-none transition-all text-white placeholder:text-slate-500"
-                        required
-                      />
+                  <div className="w-full max-w-lg">
+                    <motion.form 
+                      key="form"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onSubmit={handleSubmit} 
+                      className="flex flex-col sm:flex-row gap-4 w-full"
+                    >
+                      <div className="flex-1 relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
+                        <input 
+                          type="email" 
+                          placeholder="Your email address" 
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full pl-12 pr-4 py-5 rounded-2xl bg-white/10 border border-white/20 focus:border-blue-400 outline-none transition-all text-white placeholder:text-slate-500"
+                          required
+                        />
+                      </div>
+                      <button type="submit" className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/20 active:scale-95 flex items-center justify-center gap-2">
+                        Get the Guide
+                        <ArrowRight size={20} />
+                      </button>
+                    </motion.form>
+
+                    {/* Urgency Progress Bar */}
+                    <div className="mt-8 text-left">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Limited Time Offer: 87% Claimed</span>
+                        <span className="text-[10px] font-bold text-blue-400">12 Left</span>
+                      </div>
+                      <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                        <motion.div 
+                          initial={{ width: "0%" }}
+                          animate={{ width: "87%" }}
+                          transition={{ duration: 2, ease: "easeOut", delay: 0.5 }}
+                          className="h-full bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]"
+                        />
+                      </div>
                     </div>
-                    <button type="submit" className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/20 active:scale-95 flex items-center justify-center gap-2">
-                      Get the Guide
-                      <ArrowRight size={20} />
-                    </button>
-                  </motion.form>
+                  </div>
                 ) : (
                   <motion.div
                     key="success"
@@ -777,6 +818,40 @@ const StickyCTA = () => {
   );
 };
 
+const ScrollToTop = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsVisible(window.scrollY > 500);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          onClick={scrollToTop}
+          className="fixed bottom-24 right-6 z-50 p-4 bg-white text-blue-600 rounded-full shadow-xl border border-slate-100 hover:bg-blue-50 transition-colors md:bottom-8"
+          aria-label="Scroll to top"
+        >
+          <ArrowUp size={24} />
+        </motion.button>
+      )}
+    </AnimatePresence>
+  );
+};
+
 // --- Main Page ---
 
 export default function LandingPage() {
@@ -795,6 +870,7 @@ export default function LandingPage() {
       <FinalCTA />
       <Footer />
       <StickyCTA />
+      <ScrollToTop />
     </main>
   );
 }
