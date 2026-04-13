@@ -87,13 +87,21 @@ const Navbar = () => {
 };
 
 const Hero = () => {
+  const [email, setEmail] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) setIsSubmitted(true);
+  };
+
   return (
     <section className="relative pt-32 pb-20 overflow-hidden">
       {/* Background Accents */}
       <div className="absolute top-0 right-0 -z-10 w-1/2 h-full bg-gradient-to-l from-blue-50/50 to-transparent rounded-l-[100px]" />
       <div className="absolute -top-24 -left-24 -z-10 w-96 h-96 bg-blue-100/30 blur-3xl rounded-full" />
 
-      <div className="max-w-7xl mx-auto px-6 grid lg:grid-template-columns-[1.2fr_1fr] gap-12 items-center">
+      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[1.2fr_1fr] gap-12 items-center">
         <motion.div 
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -110,15 +118,62 @@ const Hero = () => {
           <p className="text-xl text-slate-600 leading-relaxed mb-10 max-w-xl">
             Doctor-backed practical steps to support kidney health, prevent complications, and improve your daily quality of life starting today.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <button className="bg-blue-600 text-white px-8 py-5 rounded-2xl text-lg font-bold hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 flex items-center justify-center gap-2 group active:scale-95">
-              Download the Guide Now
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="bg-white text-slate-700 border-2 border-slate-100 px-8 py-5 rounded-2xl text-lg font-bold hover:bg-slate-50 transition-all flex items-center justify-center gap-2 active:scale-95">
-              Get Free Kidney Checklist
-            </button>
-          </div>
+
+          <AnimatePresence mode="wait">
+            {!isSubmitted ? (
+              <motion.div
+                key="form"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md">
+                  <div className="relative group">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors" size={20} />
+                    <input 
+                      type="email" 
+                      placeholder="Enter your email to receive the guide" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full pl-12 pr-4 py-5 rounded-2xl border-2 border-slate-100 focus:border-blue-600 outline-none transition-all text-slate-900 bg-white/80 backdrop-blur-sm shadow-sm"
+                      required
+                    />
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <button type="submit" className="flex-1 bg-blue-600 text-white px-8 py-5 rounded-2xl text-lg font-bold hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 flex items-center justify-center gap-2 group active:scale-95">
+                      Download the Guide Now
+                      <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                </form>
+                <p className="mt-4 text-sm text-slate-500 flex items-center gap-2">
+                  <ShieldCheck size={14} className="text-green-500" />
+                  Your privacy is protected. Instant digital delivery.
+                </p>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="success"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-green-50 border border-green-100 p-8 rounded-[32px] max-w-md"
+              >
+                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white mb-4">
+                  <CheckCircle2 size={24} />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-2">Check your inbox!</h3>
+                <p className="text-slate-600">
+                  We&apos;ve sent the Kidney Health Guide to <span className="font-bold text-blue-600">{email}</span>. Please check your email (and spam folder) to start reading.
+                </p>
+                <button 
+                  onClick={() => setIsSubmitted(false)}
+                  className="mt-6 text-sm font-bold text-blue-600 hover:underline"
+                >
+                  Didn&apos;t receive it? Try again
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
           
           <div className="mt-12 flex items-center gap-6">
             <div className="flex -space-x-3">
@@ -542,6 +597,14 @@ const BlogPreview = () => {
 };
 
 const FinalCTA = () => {
+  const [email, setEmail] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) setIsSubmitted(true);
+  };
+
   return (
     <section className="py-24 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
@@ -560,10 +623,48 @@ const FinalCTA = () => {
             </p>
             
             <div className="flex flex-col items-center gap-6">
-              <button className="bg-blue-600 text-white px-12 py-6 rounded-2xl text-2xl font-bold hover:bg-blue-700 transition-all shadow-2xl shadow-blue-500/20 active:scale-95 flex items-center gap-3">
-                Download the Guide Now
-                <ArrowRight size={24} />
-              </button>
+              <AnimatePresence mode="wait">
+                {!isSubmitted ? (
+                  <motion.form 
+                    key="form"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onSubmit={handleSubmit} 
+                    className="flex flex-col sm:flex-row gap-4 w-full max-w-lg"
+                  >
+                    <div className="flex-1 relative">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
+                      <input 
+                        type="email" 
+                        placeholder="Your email address" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full pl-12 pr-4 py-5 rounded-2xl bg-white/10 border border-white/20 focus:border-blue-400 outline-none transition-all text-white placeholder:text-slate-500"
+                        required
+                      />
+                    </div>
+                    <button type="submit" className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/20 active:scale-95 flex items-center justify-center gap-2">
+                      Get the Guide
+                      <ArrowRight size={20} />
+                    </button>
+                  </motion.form>
+                ) : (
+                  <motion.div
+                    key="success"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-[32px] w-full max-w-lg"
+                  >
+                    <CheckCircle2 size={40} className="text-green-400 mx-auto mb-4" />
+                    <h3 className="text-2xl font-bold mb-2">Sent Successfully!</h3>
+                    <p className="text-slate-400">
+                      We&apos;ve sent the guide to <span className="text-white font-bold">{email}</span>. Check your inbox to begin.
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               <div className="flex items-center gap-8 text-sm font-medium text-slate-500 uppercase tracking-widest">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 size={16} className="text-green-500" />
