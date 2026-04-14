@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
+import { GoogleGenAI } from "@google/genai";
 import { 
   ShieldCheck, 
   Download, 
@@ -23,10 +24,153 @@ import {
   ArrowUp,
   Loader2,
   MessageCircle,
-  ShoppingCart
+  ShoppingCart,
+  Send,
+  Sparkles,
+  Bot
 } from 'lucide-react';
 
 // --- Components ---
+
+const AIAssistant = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [input, setInput] = useState('');
+  const [messages, setMessages] = useState<{ role: 'user' | 'ai', text: string }[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
+
+    const userMessage = input.trim();
+    setInput('');
+    setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
+    setIsLoading(true);
+
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY });
+      const response = await ai.models.generateContent({
+        model: "gemini-2.0-flash-exp",
+        contents: userMessage,
+        config: {
+          systemInstruction: "You are a helpful AI assistant for International Kidney Health. You provide general information about kidney health, dialysis, and transplantation based on medical best practices. ALWAYS include a disclaimer that you are an AI and not a doctor, and that users should consult their medical professional for personalized advice. Keep responses concise and supportive.",
+        }
+      });
+
+      const aiText = response.text || "I'm sorry, I couldn't process that request.";
+      setMessages(prev => [...prev, { role: 'ai', text: aiText }]);
+    } catch (error) {
+      console.error("Gemini API Error:", error);
+      setMessages(prev => [...prev, { role: 'ai', text: "Désolé, j'ai rencontré une erreur. Veuillez réessayer plus tard." }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed bottom-8 right-8 z-[100]">
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="absolute bottom-20 right-0 w-[350px] sm:w-[400px] bg-white rounded-[32px] shadow-2xl border border-slate-100 overflow-hidden flex flex-col"
+          >
+            {/* Header */}
+            <div className="bg-blue-600 p-6 text-white flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                  <Bot size={24} />
+                </div>
+                <div>
+                  <h3 className="font-bold">Kidney Health AI</h3>
+                  <p className="text-xs text-blue-100">Always here to help</p>
+                </div>
+              </div>
+              <button onClick={() => setIsOpen(false)} className="hover:bg-white/10 p-2 rounded-lg transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Messages */}
+            <div className="h-[400px] overflow-y-auto p-6 space-y-4 bg-slate-50">
+              {messages.length === 0 && (
+                <div className="text-center py-10">
+                  <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Sparkles size={32} />
+                  </div>
+                  <p className="text-slate-500 text-sm px-6">
+                    Posez vos questions sur la santé rénale, la dialyse ou la transplantation.
+                  </p>
+                </div>
+              )}
+              {messages.map((msg, i) => (
+                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[80%] p-4 rounded-2xl text-sm ${
+                    msg.role === 'user' 
+                      ? 'bg-blue-600 text-white rounded-tr-none' 
+                      : 'bg-white text-slate-700 shadow-sm border border-slate-100 rounded-tl-none'
+                  }`}>
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 rounded-tl-none flex gap-1">
+                    <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1 }} className="w-1.5 h-1.5 bg-blue-400 rounded-full" />
+                    <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1, delay: 0.2 }} className="w-1.5 h-1.5 bg-blue-400 rounded-full" />
+                    <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1, delay: 0.4 }} className="w-1.5 h-1.5 bg-blue-400 rounded-full" />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Input */}
+            <div className="p-4 bg-white border-t border-slate-100">
+              <form 
+                onSubmit={(e) => { e.preventDefault(); handleSend(); }}
+                className="flex gap-2"
+              >
+                <input 
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Ask a question..."
+                  className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+                <button 
+                  type="submit"
+                  disabled={!input.trim() || isLoading}
+                  className="bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50"
+                >
+                  <Send size={20} />
+                </button>
+              </form>
+              <p className="text-[10px] text-slate-400 mt-3 text-center">
+                AI can make mistakes. Consult a doctor for medical advice.
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-16 h-16 bg-blue-600 text-white rounded-full shadow-2xl flex items-center justify-center hover:bg-blue-700 transition-all relative group"
+      >
+        {isOpen ? <X size={28} /> : <MessageCircle size={28} />}
+        {!isOpen && (
+          <span className="absolute right-full mr-4 bg-slate-900 text-white text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+            Ask our AI Assistant
+          </span>
+        )}
+      </motion.button>
+    </div>
+  );
+};
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -636,60 +780,23 @@ const ProductModal = ({ product, isOpen, onClose }: { product: Product | null; i
 const ProductsSection = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const products: Product[] = [
-    {
-      id: 8543029461129,
-      name: "Kidney Transplant Journey",
-      description: "A complete patient guide to transplant surgeons, surgery, and life after transplant.",
-      fullDescription: "Ce guide complet est conçu pour éliminer la peur et l'incertitude du parcours de transplantation rénale. Il couvre tout, du diagnostic initial au choix du bon chirurgien, en passant par les détails de l'opération, la gestion des médicaments anti-rejet et le retour à une vie normale et saine. Écrit dans un langage simple et accessible.",
-      price: "450 MAD",
-      oldPrice: "650 MAD",
-      rating: 5.0,
-      reviews: 42,
-      badge: "Featured",
-      image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/mockup.png?v=1776001845",
-      whatsappMsg: "Bonjour, je souhaite commander le guide 'Kidney Transplant Journey'.",
-      customerReviews: [
-        { name: "Ahmed R.", date: "Il y a 2 semaines", comment: "Ce guide a sauvé ma famille. Nous étions perdus avant de le lire.", rating: 5 },
-        { name: "Sarah B.", date: "Il y a 1 mois", comment: "Très clair et rassurant. Je le recommande à tous les patients.", rating: 5 }
-      ]
-    },
-    {
-      id: 8514700378249,
-      name: "Living with Kidney Failure",
-      description: "The complete guide for patients and families to navigate dialysis and daily life.",
-      fullDescription: "Vivre avec une insuffisance rénale peut être accablant. Ce guide pratique aide les patients et leurs familles à comprendre les différentes options de traitement (hémodialyse, dialyse péritonéale, transplantation), à gérer le régime alimentaire et les fluides, et à maintenir une force émotionnelle au quotidien.",
-      price: "300 MAD",
-      oldPrice: "450 MAD",
-      rating: 4.9,
-      reviews: 128,
-      badge: "Best Seller",
-      image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/living-with-kidney-failure-complete-guide-for-patients-families-5806444.jpg?v=1774355589",
-      whatsappMsg: "Bonjour, je souhaite commander le guide 'Living with Kidney Failure'.",
-      customerReviews: [
-        { name: "Youssef M.", date: "Il y a 3 jours", comment: "Les conseils sur la dialyse sont excellents. Très pratique.", rating: 5 },
-        { name: "Fatima Z.", date: "Il y a 3 semaines", comment: "Un livre indispensable pour comprendre ce qui nous arrive.", rating: 4 }
-      ]
-    },
-    {
-      id: 8513107001481,
-      name: "Complete Kidney Diet Guide",
-      description: "2026 Edition: What to avoid and what to eat safely to protect your kidneys.",
-      fullDescription: "La nutrition est la clé de la santé rénale. Ce guide 2026 simplifie les règles complexes en identifiant clairement les aliments à éviter (riches en potassium, phosphore, sodium) et en proposant des alternatives délicieuses et sûres. Comprend des listes de courses et des conseils de préparation.",
-      price: "50 MAD",
-      oldPrice: "100 MAD",
-      rating: 4.8,
-      reviews: 256,
-      badge: "Essential",
-      image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/the-complete-kidney-diet-guide-what-to-avoid-what-to-eat-safely-2026-edition-9292441.webp?v=1774355589",
-      whatsappMsg: "Bonjour, je souhaite commander le 'Complete Kidney Diet Guide'.",
-      customerReviews: [
-        { name: "Karim T.", date: "Il y a 1 semaine", comment: "Enfin des listes claires sur ce qu'on peut manger au Maroc.", rating: 5 },
-        { name: "Laila S.", date: "Il y a 2 mois", comment: "Très utile pour planifier mes repas sans stress.", rating: 5 }
-      ]
-    }
-  ];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('/api/products');
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const handleOpenModal = (product: Product) => {
     setSelectedProduct(product);
@@ -740,17 +847,33 @@ const ProductsSection = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-10">
-          {products.map((product, index) => (
-            <motion.div 
-              key={product.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -12 }}
-              onClick={() => handleOpenModal(product)}
-              className="bg-white rounded-[40px] overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500 group flex flex-col h-full cursor-pointer"
-            >
+          {isLoading ? (
+            [...Array(3)].map((_, i) => (
+              <div key={i} className="bg-white rounded-[40px] overflow-hidden border border-slate-100 shadow-sm animate-pulse h-[600px]">
+                <div className="aspect-[4/5] bg-slate-100" />
+                <div className="p-8 space-y-4">
+                  <div className="h-4 bg-slate-100 rounded w-1/2" />
+                  <div className="h-8 bg-slate-100 rounded w-3/4" />
+                  <div className="h-4 bg-slate-100 rounded w-full" />
+                  <div className="h-4 bg-slate-100 rounded w-full" />
+                  <div className="mt-auto pt-10">
+                    <div className="h-12 bg-slate-100 rounded-2xl w-full" />
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            products.map((product, index) => (
+              <motion.div 
+                key={product.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -12 }}
+                onClick={() => handleOpenModal(product)}
+                className="bg-white rounded-[40px] overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500 group flex flex-col h-full cursor-pointer"
+              >
               <div className="aspect-[4/5] relative overflow-hidden">
                 <Image 
                   src={product.image} 
@@ -802,7 +925,8 @@ const ProductsSection = () => {
                 </div>
               </div>
             </motion.div>
-          ))}
+          ))
+        )}
         </div>
         
         <div className="mt-20 text-center">
@@ -1351,6 +1475,7 @@ export default function LandingPage() {
       <Footer />
       <StickyCTA />
       <ScrollToTop />
+      <AIAssistant />
     </main>
   );
 }
