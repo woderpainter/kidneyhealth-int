@@ -444,73 +444,133 @@ const ProductsSection = () => {
       id: 1,
       name: "Kidney Support Supplement",
       price: "$49.99",
-      image: "https://picsum.photos/seed/supplement/400/400",
+      rating: 4.9,
+      reviews: 128,
+      badge: "Best Seller",
+      image: "https://picsum.photos/seed/supplement/600/600",
       whatsappMsg: "Hello, I am interested in the Kidney Support Supplement."
     },
     {
       id: 2,
       name: "Low-Sodium Recipe Book",
       price: "$19.99",
-      image: "https://picsum.photos/seed/recipes/400/400",
+      rating: 4.8,
+      reviews: 85,
+      badge: "New Arrival",
+      image: "https://picsum.photos/seed/recipes/600/600",
       whatsappMsg: "Hello, I am interested in the Low-Sodium Recipe Book."
     },
     {
       id: 3,
       name: "Kidney Health Tracker",
       price: "$29.99",
-      image: "https://picsum.photos/seed/tracker/400/400",
+      rating: 4.7,
+      reviews: 64,
+      badge: "Most Popular",
+      image: "https://picsum.photos/seed/tracker/600/600",
       whatsappMsg: "Hello, I am interested in the Kidney Health Tracker."
     }
   ];
 
   return (
-    <section id="products" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="products" className="py-24 bg-slate-50 relative overflow-hidden">
+      {/* Background Accents */}
+      <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
+        <div className="absolute top-1/4 -left-24 w-96 h-96 bg-blue-100 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 -right-24 w-96 h-96 bg-green-100 rounded-full blur-[120px]" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
-          <h2 className="font-serif text-4xl md:text-5xl font-bold text-slate-900 mb-6">Premium Kidney Health Products</h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-xs font-bold mb-6 uppercase tracking-widest"
+          >
+            <ShoppingCart size={14} />
+            <span>Premium Shop</span>
+          </motion.div>
+          <h2 className="font-serif text-4xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
+            Support Your Journey with <br />
+            <span className="text-blue-600 italic">Premium Products</span>
+          </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Carefully selected products to support your journey towards better kidney health and overall well-being.
+            Scientifically formulated and carefully selected to provide the best support for your kidney health.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {products.map((product) => (
+        <div className="grid md:grid-cols-3 gap-10">
+          {products.map((product, index) => (
             <motion.div 
               key={product.id}
-              whileHover={{ y: -10 }}
-              className="bg-slate-50 rounded-[32px] overflow-hidden border border-slate-100 hover:shadow-xl transition-all group"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ y: -12 }}
+              className="bg-white rounded-[40px] overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500 group flex flex-col h-full"
             >
-              <div className="aspect-square relative overflow-hidden">
+              <div className="aspect-[4/5] relative overflow-hidden">
                 <Image 
                   src={product.image} 
                   alt={product.name} 
                   fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="object-cover group-hover:scale-110 transition-transform duration-700"
                   referrerPolicy="no-referrer"
                 />
+                {product.badge && (
+                  <div className="absolute top-6 left-6 bg-blue-600 text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg">
+                    {product.badge}
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
-              <div className="p-8">
-                <h3 className="text-xl font-bold text-slate-900 mb-2">{product.name}</h3>
-                <p className="text-2xl font-serif font-bold text-blue-600 mb-6">{product.price}</p>
+              
+              <div className="p-8 flex flex-col flex-grow">
+                <div className="flex items-center gap-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={14} className={i < 4 ? "fill-amber-400 text-amber-400" : "fill-slate-200 text-slate-200"} />
+                  ))}
+                  <span className="text-xs font-bold text-slate-400 ml-2">{product.rating} ({product.reviews})</span>
+                </div>
                 
-                <div className="flex flex-col gap-3">
-                  <button className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
-                    <ShoppingCart size={18} />
-                    Buy Now
-                  </button>
-                  <a 
-                    href={`https://wa.me/1234567890?text=${encodeURIComponent(product.whatsappMsg)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full bg-green-500 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-green-600 transition-all shadow-lg shadow-green-100"
-                  >
-                    <MessageCircle size={18} />
-                    Order via WhatsApp
-                  </a>
+                <h3 className="text-2xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">{product.name}</h3>
+                <p className="text-slate-500 text-sm mb-6 line-clamp-2">High-quality support designed for daily kidney health maintenance and protection.</p>
+                
+                <div className="mt-auto">
+                  <div className="flex items-baseline gap-2 mb-6">
+                    <span className="text-3xl font-serif font-bold text-slate-900">{product.price}</span>
+                    <span className="text-sm text-slate-400 line-through font-medium">$69.99</span>
+                  </div>
+                  
+                  <div className="flex flex-col gap-3">
+                    <button className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-blue-600 transition-all shadow-xl shadow-slate-200 active:scale-95">
+                      <ShoppingCart size={18} />
+                      Add to Cart
+                    </button>
+                    <a 
+                      href={`https://wa.me/1234567890?text=${encodeURIComponent(product.whatsappMsg)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full bg-white border-2 border-green-500 text-green-600 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-green-50 transition-all active:scale-95"
+                    >
+                      <MessageCircle size={18} />
+                      Order via WhatsApp
+                    </a>
+                  </div>
                 </div>
               </div>
             </motion.div>
           ))}
+        </div>
+        
+        <div className="mt-20 text-center">
+          <p className="text-slate-500 text-sm mb-6 flex items-center justify-center gap-4">
+            <span className="flex items-center gap-1"><ShieldCheck size={14} className="text-green-500" /> Secure Payment</span>
+            <span className="w-1.5 h-1.5 bg-slate-200 rounded-full" />
+            <span className="flex items-center gap-1"><Clock size={14} className="text-blue-500" /> Fast Shipping</span>
+          </p>
         </div>
       </div>
     </section>
