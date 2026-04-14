@@ -28,12 +28,10 @@ export async function POST(req: Request) {
 
     if (!resend) {
       console.error('RESEND_API_KEY is not set');
-      // For demo purposes, we'll return success even if the key is missing
-      // but log the error. In production, you'd want to handle this.
       return NextResponse.json({ 
-        success: true, 
-        message: 'Demo mode: Email capture simulated. Set RESEND_API_KEY for real delivery.' 
-      });
+        success: false, 
+        error: 'RESEND_API_KEY is missing. Please add it in the app settings to enable real email delivery.' 
+      }, { status: 401 });
     }
 
     const data = await resend.emails.send({

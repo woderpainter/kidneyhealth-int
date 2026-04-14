@@ -98,12 +98,14 @@ const Hero = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
 
     setIsLoading(true);
+    setError(null);
     try {
       const response = await fetch('/api/send-email', {
         method: 'POST',
@@ -111,16 +113,17 @@ const Hero = () => {
         body: JSON.stringify({ email }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         setIsSubmitted(true);
       } else {
-        console.error('Failed to send email');
-        // Still show success for demo if API fails but we want to simulate success
-        setIsSubmitted(true);
+        console.error('Failed to send email:', data.error);
+        setError(data.error || 'Failed to send email. Please try again.');
       }
     } catch (error) {
       console.error('Error sending email:', error);
-      setIsSubmitted(true);
+      setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -187,6 +190,17 @@ const Hero = () => {
                     </button>
                   </div>
                 </form>
+
+                {error && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-4 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 text-red-600 text-sm"
+                  >
+                    <AlertCircle size={18} />
+                    <p>{error}</p>
+                  </motion.div>
+                )}
 
                 {/* Urgency Progress Bar */}
                 <div className="mt-6 max-w-md">
@@ -484,8 +498,10 @@ const ProductsSection = () => {
   const products = [
     {
       id: 8543029461129,
-      name: "Kidney Transplant Journey: Complete Guide",
-      price: "$42.99",
+      name: "Kidney Transplant Journey",
+      description: "A complete patient guide to transplant surgeons, surgery, and life after transplant.",
+      price: "450 MAD",
+      oldPrice: "650 MAD",
       rating: 5.0,
       reviews: 42,
       badge: "Featured",
@@ -494,8 +510,10 @@ const ProductsSection = () => {
     },
     {
       id: 8514700378249,
-      name: "Living with Kidney Failure Guide",
-      price: "$29.59",
+      name: "Living with Kidney Failure",
+      description: "The complete guide for patients and families to navigate dialysis and daily life.",
+      price: "300 MAD",
+      oldPrice: "450 MAD",
       rating: 4.9,
       reviews: 128,
       badge: "Best Seller",
@@ -504,43 +522,15 @@ const ProductsSection = () => {
     },
     {
       id: 8513107001481,
-      name: "The Complete Kidney Diet Guide",
-      price: "$3.99",
+      name: "Complete Kidney Diet Guide",
+      description: "2026 Edition: What to avoid and what to eat safely to protect your kidneys.",
+      price: "50 MAD",
+      oldPrice: "100 MAD",
       rating: 4.8,
       reviews: 256,
       badge: "Essential",
       image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/the-complete-kidney-diet-guide-what-to-avoid-what-to-eat-safely-2026-edition-9292441.webp?v=1774355589",
       whatsappMsg: "Hello, I am interested in The Complete Kidney Diet Guide."
-    },
-    {
-      id: 8513123614857,
-      name: "Pediatric Dialysis Meal Guide",
-      price: "$15.00",
-      rating: 4.9,
-      reviews: 56,
-      badge: "Specialized",
-      image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/the-complete-pediatric-dialysis-meal-guide-simple-safe-practical-nutrition-for-parents-2337050.png?v=1774448947",
-      whatsappMsg: "Hello, I am interested in the Pediatric Dialysis Meal Guide."
-    },
-    {
-      id: 8513111785609,
-      name: "Dialysis Monitoring Agenda",
-      price: "$9.99",
-      rating: 4.7,
-      reviews: 89,
-      badge: "Practical",
-      image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/dialysis-daily-monitoring-agenda-patient-caregiver-health-log-30-day-daily-tracker-for-vital-signs-medications-fluids-notes-7824199.png?v=1774448947",
-      whatsappMsg: "Hello, I am interested in the Dialysis Monitoring Agenda."
-    },
-    {
-      id: 8541983375497,
-      name: "Pregnancy & Urinary Health Guide",
-      price: "$15.99",
-      rating: 4.8,
-      reviews: 34,
-      badge: "New",
-      image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/pregnancy-and-urinary-health-navigating-cloudy-urine-issues-7222519.png?v=1775857508",
-      whatsappMsg: "Hello, I am interested in the Pregnancy & Urinary Health Guide."
     }
   ];
 
@@ -565,10 +555,10 @@ const ProductsSection = () => {
           </motion.div>
           <h2 className="font-serif text-4xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
             Support Your Journey with <br />
-            <span className="text-blue-600 italic">Premium Products</span>
+            <span className="text-blue-600 italic">Premium Resources</span>
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Scientifically formulated and carefully selected to provide the best support for your kidney health.
+            Scientifically backed guides and tools carefully selected to provide the best support for your kidney health.
           </p>
         </div>
 
@@ -607,29 +597,28 @@ const ProductsSection = () => {
                   <span className="text-xs font-bold text-slate-400 ml-2">{product.rating} ({product.reviews})</span>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">{product.name}</h3>
-                <p className="text-slate-500 text-sm mb-6 line-clamp-2">High-quality support designed for daily kidney health maintenance and protection.</p>
+                <h3 className="text-2xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors leading-tight">{product.name}</h3>
+                <p className="text-slate-500 text-sm mb-6 line-clamp-2">{product.description}</p>
                 
                 <div className="mt-auto">
                   <div className="flex items-baseline gap-2 mb-6">
                     <span className="text-3xl font-serif font-bold text-slate-900">{product.price}</span>
-                    <span className="text-sm text-slate-400 line-through font-medium">$69.99</span>
+                    <span className="text-sm text-slate-400 line-through font-medium">{product.oldPrice}</span>
                   </div>
                   
                   <div className="flex flex-col gap-3">
-                    <button className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-blue-600 transition-all shadow-xl shadow-slate-200 active:scale-95">
-                      <ShoppingCart size={18} />
-                      Add to Cart
-                    </button>
                     <a 
-                      href={`https://wa.me/1234567890?text=${encodeURIComponent(product.whatsappMsg)}`}
+                      href={`https://wa.me/212600000000?text=${encodeURIComponent(product.whatsappMsg)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full bg-white border-2 border-green-500 text-green-600 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-green-50 transition-all active:scale-95"
+                      className="w-full bg-green-500 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-green-600 transition-all shadow-xl shadow-green-100 active:scale-95"
                     >
                       <MessageCircle size={18} />
-                      Order via WhatsApp
+                      Commander via WhatsApp
                     </a>
+                    <button className="w-full bg-slate-50 text-slate-600 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-100 transition-all active:scale-95 text-sm">
+                      Détails du produit
+                    </button>
                   </div>
                 </div>
               </div>
@@ -872,12 +861,14 @@ const FinalCTA = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
 
     setIsLoading(true);
+    setError(null);
     try {
       const response = await fetch('/api/send-email', {
         method: 'POST',
@@ -885,13 +876,17 @@ const FinalCTA = () => {
         body: JSON.stringify({ email }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         setIsSubmitted(true);
       } else {
-        setIsSubmitted(true);
+        console.error('Failed to send email:', data.error);
+        setError(data.error || 'Failed to send email. Please try again.');
       }
     } catch (error) {
-      setIsSubmitted(true);
+      console.error('Error sending email:', error);
+      setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -952,6 +947,17 @@ const FinalCTA = () => {
                         )}
                       </button>
                     </motion.form>
+
+                    {error && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-3 text-red-400 text-sm text-left"
+                      >
+                        <AlertCircle size={18} />
+                        <p>{error}</p>
+                      </motion.div>
+                    )}
 
                     {/* Urgency Progress Bar */}
                     <div className="mt-8 text-left">
