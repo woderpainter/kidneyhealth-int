@@ -143,11 +143,11 @@ const Hero = () => {
             <span>Doctor-Backed Kidney Education</span>
           </div>
           <h1 className="font-serif text-5xl md:text-7xl font-bold text-slate-900 leading-[1.1] mb-6">
-            Protect Your Kidneys <br />
-            <span className="text-blue-600 italic">Before It&apos;s Too Late</span>
+            Kidney Transplant <br />
+            <span className="text-blue-600 italic">Journey</span>
           </h1>
           <p className="text-xl text-slate-600 leading-relaxed mb-10 max-w-xl">
-            Doctor-backed practical steps to support kidney health, prevent complications, and improve your daily quality of life starting today.
+            Take the fear and uncertainty out of the kidney transplant journey with this complete, easy-to-understand patient guide.
           </p>
 
           <AnimatePresence mode="wait">
@@ -268,16 +268,16 @@ const Hero = () => {
           <div className="relative z-10 bg-white p-4 rounded-[40px] shadow-2xl shadow-blue-200/50 border border-slate-100">
             <div className="aspect-[3/4] relative rounded-[32px] overflow-hidden bg-slate-900">
               <Image 
-                src="https://picsum.photos/seed/kidney-guide/800/1066" 
-                alt="Kidney Health Guide Mockup" 
+                src="https://cdn.shopify.com/s/files/1/0656/4849/2681/files/mockup.png?v=1776001845" 
+                alt="Kidney Transplant Journey Mockup" 
                 fill
                 className="object-cover opacity-90"
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent flex flex-col justify-end p-8">
                 <div className="bg-blue-600 w-16 h-1 mb-4" />
-                <h3 className="text-white font-serif text-3xl font-bold mb-2">The Complete Kidney Support Guide</h3>
-                <p className="text-blue-100 text-sm font-medium">By Dr. Sarah Mitchell & The IKH Team</p>
+                <h3 className="text-white font-serif text-3xl font-bold mb-2">Kidney Transplant Journey</h3>
+                <p className="text-blue-100 text-sm font-medium">A Complete Patient Guide</p>
               </div>
             </div>
           </div>
@@ -377,12 +377,16 @@ const ProblemSection = () => {
 
 const SolutionSection = () => {
   const features = [
-    "Understanding Your Lab Results (Creatinine, GFR, BUN)",
-    "The Kidney-Friendly Diet: What to Eat & What to Avoid",
-    "Hydration Secrets for Optimal Filtration",
-    "Natural Ways to Manage Blood Pressure",
-    "Early Warning Signs You Must Never Ignore",
-    "Supplement Guide: What's Safe and What's Dangerous"
+    "When a kidney transplant is needed",
+    "Choosing the right transplant surgeon and hospital",
+    "What happens during transplant evaluation",
+    "How kidney transplant surgery works step by step",
+    "Recovery timelines and what to expect",
+    "Anti-rejection medications and side effects",
+    "Diet, lifestyle, and long-term kidney protection",
+    "Emotional health and mental recovery",
+    "Costs and financial planning",
+    "Common myths and real patient FAQs"
   ];
 
   return (
@@ -393,8 +397,8 @@ const SolutionSection = () => {
             <div className="relative">
               <div className="aspect-[4/5] relative rounded-[40px] overflow-hidden shadow-2xl">
                 <Image 
-                  src="https://picsum.photos/seed/health-ebook/800/1000" 
-                  alt="Ebook Interior" 
+                  src="https://cdn.shopify.com/s/files/1/0656/4849/2681/files/mockup.png?v=1776001845" 
+                  alt="Kidney Transplant Journey Ebook" 
                   fill
                   className="object-cover"
                   referrerPolicy="no-referrer"
@@ -404,33 +408,71 @@ const SolutionSection = () => {
                 <div className="flex text-amber-400 mb-3">
                   {[1, 2, 3, 4, 5].map((i) => <Star key={i} size={16} fill="currentColor" />)}
                 </div>
-                <p className="text-slate-900 font-bold italic mb-2">&quot;This guide saved my life. My GFR improved by 12 points in just 3 months!&quot;</p>
-                <p className="text-xs text-slate-500">— Robert K., Stage 3 CKD Patient</p>
+                <p className="text-slate-900 font-bold italic mb-2">&quot;This guide took the fear out of my surgery. I knew exactly what to expect at every stage.&quot;</p>
+                <p className="text-xs text-slate-500">— Sarah M., Kidney Transplant Recipient</p>
               </div>
             </div>
           </div>
 
           <div className="order-1 lg:order-2">
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-slate-900 mb-8">The Ultimate Blueprint for Kidney Longevity</h2>
+            <h2 className="font-serif text-4xl md:text-5xl font-bold text-slate-900 mb-8">A Complete Patient Guide to Transplant Success</h2>
             <p className="text-lg text-slate-600 mb-10">
-              Our comprehensive guide distills complex medical information into easy-to-follow daily actions. No medical degree required—just a commitment to your health.
+              Kidney Transplant Journey is a practical ebook designed to help patients and families understand every stage—from diagnosis to long-term life after transplant.
             </p>
             
-            <div className="space-y-4 mb-12">
+            <div className="grid sm:grid-cols-2 gap-x-8 gap-y-4 mb-12">
               {features.map((feature, i) => (
-                <div key={i} className="flex items-start gap-4">
-                  <div className="mt-1 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                    <CheckCircle2 size={14} />
+                <div key={i} className="flex items-start gap-3">
+                  <div className="mt-1 w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <CheckCircle2 size={12} />
                   </div>
-                  <span className="text-slate-700 font-medium">{feature}</span>
+                  <span className="text-slate-700 font-medium text-sm">{feature}</span>
                 </div>
               ))}
             </div>
 
+            <div className="grid md:grid-cols-2 gap-6 mb-12">
+              <div className="bg-white p-6 rounded-3xl border border-slate-100">
+                <h4 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                  <Heart size={18} className="text-red-500" />
+                  Who is this for?
+                </h4>
+                <ul className="space-y-2 text-sm text-slate-600">
+                  <li className="flex items-center gap-2">✔ Preparing for a transplant</li>
+                  <li className="flex items-center gap-2">✔ Supporting a loved one</li>
+                  <li className="flex items-center gap-2">✔ Recovering after surgery</li>
+                </ul>
+              </div>
+              <div className="bg-white p-6 rounded-3xl border border-slate-100">
+                <h4 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                  <BookOpen size={18} className="text-blue-600" />
+                  What you get
+                </h4>
+                <ul className="space-y-2 text-sm text-slate-600">
+                  <li className="flex items-center gap-2">✔ Instant digital download (PDF)</li>
+                  <li className="flex items-center gap-2">✔ Comprehensive patient-friendly guide</li>
+                  <li className="flex items-center gap-2">✔ Practical advice you can use immediately</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="bg-blue-50 p-6 rounded-3xl border border-blue-100 mb-12">
+              <h4 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <Download size={18} className="text-blue-600" />
+                Download Information
+              </h4>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li className="flex items-center gap-2">✔ Instant access after payment</li>
+                <li className="flex items-center gap-2">✔ Download link sent via email</li>
+                <li className="flex items-center gap-2">✔ Compatible with phone, tablet, and computer</li>
+                <li className="flex items-center gap-2">✔ No physical shipping required</li>
+              </ul>
+            </div>
+
             <button className="w-full sm:w-auto bg-blue-600 text-white px-10 py-5 rounded-2xl text-xl font-bold hover:bg-blue-700 transition-all shadow-2xl shadow-blue-200 active:scale-95">
-              Get the Full Guide - $27
+              Download the Guide - $27
             </button>
-            <p className="mt-4 text-sm text-slate-500 text-center sm:text-left">One-time payment. Lifetime updates included.</p>
+            <p className="mt-4 text-sm text-slate-500 text-center sm:text-left">Instant digital access. PDF format.</p>
           </div>
         </div>
       </div>
@@ -441,34 +483,64 @@ const SolutionSection = () => {
 const ProductsSection = () => {
   const products = [
     {
-      id: 1,
-      name: "Kidney Support Supplement",
-      price: "$49.99",
+      id: 8543029461129,
+      name: "Kidney Transplant Journey: Complete Guide",
+      price: "$42.99",
+      rating: 5.0,
+      reviews: 42,
+      badge: "Featured",
+      image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/mockup.png?v=1776001845",
+      whatsappMsg: "Hello, I am interested in the Kidney Transplant Journey ebook."
+    },
+    {
+      id: 8514700378249,
+      name: "Living with Kidney Failure Guide",
+      price: "$29.59",
       rating: 4.9,
       reviews: 128,
       badge: "Best Seller",
-      image: "https://picsum.photos/seed/supplement/600/600",
-      whatsappMsg: "Hello, I am interested in the Kidney Support Supplement."
+      image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/living-with-kidney-failure-complete-guide-for-patients-families-5806444.jpg?v=1774355589",
+      whatsappMsg: "Hello, I am interested in the Living with Kidney Failure Guide."
     },
     {
-      id: 2,
-      name: "Low-Sodium Recipe Book",
-      price: "$19.99",
+      id: 8513107001481,
+      name: "The Complete Kidney Diet Guide",
+      price: "$3.99",
       rating: 4.8,
-      reviews: 85,
-      badge: "New Arrival",
-      image: "https://picsum.photos/seed/recipes/600/600",
-      whatsappMsg: "Hello, I am interested in the Low-Sodium Recipe Book."
+      reviews: 256,
+      badge: "Essential",
+      image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/the-complete-kidney-diet-guide-what-to-avoid-what-to-eat-safely-2026-edition-9292441.webp?v=1774355589",
+      whatsappMsg: "Hello, I am interested in The Complete Kidney Diet Guide."
     },
     {
-      id: 3,
-      name: "Kidney Health Tracker",
-      price: "$29.99",
+      id: 8513123614857,
+      name: "Pediatric Dialysis Meal Guide",
+      price: "$15.00",
+      rating: 4.9,
+      reviews: 56,
+      badge: "Specialized",
+      image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/the-complete-pediatric-dialysis-meal-guide-simple-safe-practical-nutrition-for-parents-2337050.png?v=1774448947",
+      whatsappMsg: "Hello, I am interested in the Pediatric Dialysis Meal Guide."
+    },
+    {
+      id: 8513111785609,
+      name: "Dialysis Monitoring Agenda",
+      price: "$9.99",
       rating: 4.7,
-      reviews: 64,
-      badge: "Most Popular",
-      image: "https://picsum.photos/seed/tracker/600/600",
-      whatsappMsg: "Hello, I am interested in the Kidney Health Tracker."
+      reviews: 89,
+      badge: "Practical",
+      image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/dialysis-daily-monitoring-agenda-patient-caregiver-health-log-30-day-daily-tracker-for-vital-signs-medications-fluids-notes-7824199.png?v=1774448947",
+      whatsappMsg: "Hello, I am interested in the Dialysis Monitoring Agenda."
+    },
+    {
+      id: 8541983375497,
+      name: "Pregnancy & Urinary Health Guide",
+      price: "$15.99",
+      rating: 4.8,
+      reviews: 34,
+      badge: "New",
+      image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/pregnancy-and-urinary-health-navigating-cloudy-urine-issues-7222519.png?v=1775857508",
+      whatsappMsg: "Hello, I am interested in the Pregnancy & Urinary Health Guide."
     }
   ];
 
@@ -836,10 +908,10 @@ const FinalCTA = () => {
 
           <div className="relative z-10 max-w-3xl mx-auto">
             <h2 className="font-serif text-5xl md:text-7xl font-bold mb-8 leading-tight">
-              Start Protecting Your Kidneys <span className="text-blue-400">Today</span>
+              Start Your Transplant Journey with <span className="text-blue-400">Confidence</span>
             </h2>
             <p className="text-xl text-slate-400 mb-12 leading-relaxed">
-              Don&apos;t leave your health to chance. Get the comprehensive guide trusted by thousands and start your journey to better kidney health now.
+              Take the fear out of surgery and recovery. Get the complete patient guide trusted by recipients and families worldwide.
             </p>
             
             <div className="flex flex-col items-center gap-6">
