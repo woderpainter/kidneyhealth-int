@@ -46,7 +46,7 @@ export async function POST(req: Request) {
           </p>
           <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
             <p style="margin-bottom: 20px; font-weight: bold;">Click the button below to download your guide:</p>
-            <a href="https://picsum.photos/seed/guide-pdf/800/1200" style="background-color: #2563eb; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">Download Guide (PDF)</a>
+            <a href="https://lifebeyonddialysis.com/files/kidney-transplant-guide.pdf" style="background-color: #2563eb; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">Download Guide (PDF)</a>
           </div>
           <p style="font-size: 14px; color: #64748b;">
             If you have any questions, feel free to reply to this email. We're here to support you.

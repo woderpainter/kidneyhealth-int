@@ -240,12 +240,23 @@ const Hero = () => {
                 <p className="text-slate-600">
                   We&apos;ve sent the Kidney Health Guide to <span className="font-bold text-blue-600">{email}</span>. Please check your email (and spam folder) to start reading.
                 </p>
-                <button 
-                  onClick={() => setIsSubmitted(false)}
-                  className="mt-6 text-sm font-bold text-blue-600 hover:underline"
-                >
-                  Didn&apos;t receive it? Try again
-                </button>
+                <div className="mt-6 flex flex-col gap-4">
+                  <a 
+                    href="https://lifebeyonddialysis.com/files/kidney-transplant-guide.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all shadow-lg"
+                  >
+                    <Download size={18} />
+                    Download PDF Now
+                  </a>
+                  <button 
+                    onClick={() => setIsSubmitted(false)}
+                    className="text-sm font-bold text-slate-400 hover:text-blue-600 transition-colors"
+                  >
+                    Didn&apos;t receive it? Try again
+                  </button>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -483,9 +494,14 @@ const SolutionSection = () => {
               </ul>
             </div>
 
-            <button className="w-full sm:w-auto bg-blue-600 text-white px-10 py-5 rounded-2xl text-xl font-bold hover:bg-blue-700 transition-all shadow-2xl shadow-blue-200 active:scale-95">
+            <a 
+              href="https://lifebeyonddialysis.com/files/kidney-transplant-guide.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block w-full sm:w-auto bg-blue-600 text-white px-10 py-5 rounded-2xl text-xl font-bold hover:bg-blue-700 transition-all shadow-2xl shadow-blue-200 active:scale-95 text-center"
+            >
               Download the Guide - $27
-            </button>
+            </a>
             <p className="mt-4 text-sm text-slate-500 text-center sm:text-left">Instant digital access. PDF format.</p>
           </div>
         </div>
@@ -494,45 +510,206 @@ const SolutionSection = () => {
   );
 };
 
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  fullDescription: string;
+  price: string;
+  oldPrice: string;
+  rating: number;
+  reviews: number;
+  badge: string;
+  image: string;
+  whatsappMsg: string;
+  customerReviews: { name: string; date: string; comment: string; rating: number }[];
+}
+
+const ProductModal = ({ product, isOpen, onClose }: { product: Product | null; isOpen: boolean; onClose: () => void }) => {
+  if (!product) return null;
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="relative w-full max-w-5xl bg-white rounded-[40px] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col md:flex-row"
+          >
+            <button 
+              onClick={onClose}
+              className="absolute top-6 right-6 z-10 p-2 bg-white/80 backdrop-blur-md rounded-full text-slate-900 hover:bg-white transition-all shadow-lg"
+            >
+              <X size={24} />
+            </button>
+
+            {/* Left: Image Section */}
+            <div className="md:w-1/2 relative h-[300px] md:h-auto bg-slate-100">
+              <Image 
+                src={product.image} 
+                alt={product.name} 
+                fill
+                className="object-cover"
+                referrerPolicy="no-referrer"
+              />
+              {product.badge && (
+                <div className="absolute top-8 left-8 bg-blue-600 text-white px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest shadow-xl">
+                  {product.badge}
+                </div>
+              )}
+            </div>
+
+            {/* Right: Content Section */}
+            <div className="md:w-1/2 p-8 md:p-12 overflow-y-auto custom-scrollbar">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={16} className={i < Math.floor(product.rating) ? "fill-amber-400 text-amber-400" : "fill-slate-200 text-slate-200"} />
+                  ))}
+                </div>
+                <span className="text-sm font-bold text-slate-400">{product.rating} ({product.reviews} avis)</span>
+              </div>
+
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-slate-900 mb-4 leading-tight">{product.name}</h2>
+              
+              <div className="flex items-baseline gap-3 mb-8">
+                <span className="text-4xl font-serif font-bold text-blue-600">{product.price}</span>
+                <span className="text-lg text-slate-400 line-through font-medium">{product.oldPrice}</span>
+              </div>
+
+              <div className="space-y-6 mb-10">
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest mb-3">Description Complète</h4>
+                  <p className="text-slate-600 leading-relaxed">{product.fullDescription}</p>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest mb-4">Avis Clients</h4>
+                  <div className="space-y-4">
+                    {product.customerReviews.map((review, i) => (
+                      <div key={i} className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="font-bold text-slate-900 text-sm">{review.name}</span>
+                          <span className="text-[10px] text-slate-400 font-medium">{review.date}</span>
+                        </div>
+                        <div className="flex items-center gap-1 mb-2">
+                          {[...Array(5)].map((_, j) => (
+                            <Star key={j} size={10} className={j < review.rating ? "fill-amber-400 text-amber-400" : "fill-slate-200 text-slate-200"} />
+                          ))}
+                        </div>
+                        <p className="text-xs text-slate-500 italic leading-relaxed">&quot;{review.comment}&quot;</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="sticky bottom-0 pt-6 bg-white border-t border-slate-100 flex flex-col gap-4">
+                <a 
+                  href={`https://wa.me/212600000000?text=${encodeURIComponent(product.whatsappMsg)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-green-500 text-white py-5 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-green-600 transition-all shadow-xl shadow-green-100 active:scale-95"
+                >
+                  <MessageCircle size={22} />
+                  Commander via WhatsApp
+                </a>
+                <p className="text-[10px] text-slate-400 text-center">Paiement à la livraison disponible partout au Maroc.</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 const ProductsSection = () => {
-  const products = [
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const products: Product[] = [
     {
       id: 8543029461129,
       name: "Kidney Transplant Journey",
       description: "A complete patient guide to transplant surgeons, surgery, and life after transplant.",
+      fullDescription: "Ce guide complet est conçu pour éliminer la peur et l'incertitude du parcours de transplantation rénale. Il couvre tout, du diagnostic initial au choix du bon chirurgien, en passant par les détails de l'opération, la gestion des médicaments anti-rejet et le retour à une vie normale et saine. Écrit dans un langage simple et accessible.",
       price: "450 MAD",
       oldPrice: "650 MAD",
       rating: 5.0,
       reviews: 42,
       badge: "Featured",
       image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/mockup.png?v=1776001845",
-      whatsappMsg: "Hello, I am interested in the Kidney Transplant Journey ebook."
+      whatsappMsg: "Bonjour, je souhaite commander le guide 'Kidney Transplant Journey'.",
+      customerReviews: [
+        { name: "Ahmed R.", date: "Il y a 2 semaines", comment: "Ce guide a sauvé ma famille. Nous étions perdus avant de le lire.", rating: 5 },
+        { name: "Sarah B.", date: "Il y a 1 mois", comment: "Très clair et rassurant. Je le recommande à tous les patients.", rating: 5 }
+      ]
     },
     {
       id: 8514700378249,
       name: "Living with Kidney Failure",
       description: "The complete guide for patients and families to navigate dialysis and daily life.",
+      fullDescription: "Vivre avec une insuffisance rénale peut être accablant. Ce guide pratique aide les patients et leurs familles à comprendre les différentes options de traitement (hémodialyse, dialyse péritonéale, transplantation), à gérer le régime alimentaire et les fluides, et à maintenir une force émotionnelle au quotidien.",
       price: "300 MAD",
       oldPrice: "450 MAD",
       rating: 4.9,
       reviews: 128,
       badge: "Best Seller",
       image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/living-with-kidney-failure-complete-guide-for-patients-families-5806444.jpg?v=1774355589",
-      whatsappMsg: "Hello, I am interested in the Living with Kidney Failure Guide."
+      whatsappMsg: "Bonjour, je souhaite commander le guide 'Living with Kidney Failure'.",
+      customerReviews: [
+        { name: "Youssef M.", date: "Il y a 3 jours", comment: "Les conseils sur la dialyse sont excellents. Très pratique.", rating: 5 },
+        { name: "Fatima Z.", date: "Il y a 3 semaines", comment: "Un livre indispensable pour comprendre ce qui nous arrive.", rating: 4 }
+      ]
     },
     {
       id: 8513107001481,
       name: "Complete Kidney Diet Guide",
       description: "2026 Edition: What to avoid and what to eat safely to protect your kidneys.",
+      fullDescription: "La nutrition est la clé de la santé rénale. Ce guide 2026 simplifie les règles complexes en identifiant clairement les aliments à éviter (riches en potassium, phosphore, sodium) et en proposant des alternatives délicieuses et sûres. Comprend des listes de courses et des conseils de préparation.",
       price: "50 MAD",
       oldPrice: "100 MAD",
       rating: 4.8,
       reviews: 256,
       badge: "Essential",
       image: "https://cdn.shopify.com/s/files/1/0656/4849/2681/files/the-complete-kidney-diet-guide-what-to-avoid-what-to-eat-safely-2026-edition-9292441.webp?v=1774355589",
-      whatsappMsg: "Hello, I am interested in The Complete Kidney Diet Guide."
+      whatsappMsg: "Bonjour, je souhaite commander le 'Complete Kidney Diet Guide'.",
+      customerReviews: [
+        { name: "Karim T.", date: "Il y a 1 semaine", comment: "Enfin des listes claires sur ce qu'on peut manger au Maroc.", rating: 5 },
+        { name: "Laila S.", date: "Il y a 2 mois", comment: "Très utile pour planifier mes repas sans stress.", rating: 5 }
+      ]
     }
   ];
+
+  const handleOpenModal = (product: Product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isModalOpen]);
 
   return (
     <section id="products" className="py-24 bg-slate-50 relative overflow-hidden">
@@ -571,7 +748,8 @@ const ProductsSection = () => {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -12 }}
-              className="bg-white rounded-[40px] overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500 group flex flex-col h-full"
+              onClick={() => handleOpenModal(product)}
+              className="bg-white rounded-[40px] overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500 group flex flex-col h-full cursor-pointer"
             >
               <div className="aspect-[4/5] relative overflow-hidden">
                 <Image 
@@ -592,7 +770,7 @@ const ProductsSection = () => {
               <div className="p-8 flex flex-col flex-grow">
                 <div className="flex items-center gap-1 mb-3">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={14} className={i < 4 ? "fill-amber-400 text-amber-400" : "fill-slate-200 text-slate-200"} />
+                    <Star key={i} size={14} className={i < Math.floor(product.rating) ? "fill-amber-400 text-amber-400" : "fill-slate-200 text-slate-200"} />
                   ))}
                   <span className="text-xs font-bold text-slate-400 ml-2">{product.rating} ({product.reviews})</span>
                 </div>
@@ -607,15 +785,16 @@ const ProductsSection = () => {
                   </div>
                   
                   <div className="flex flex-col gap-3">
-                    <a 
-                      href={`https://wa.me/212600000000?text=${encodeURIComponent(product.whatsappMsg)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(`https://wa.me/212600000000?text=${encodeURIComponent(product.whatsappMsg)}`, '_blank');
+                      }}
                       className="w-full bg-green-500 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-green-600 transition-all shadow-xl shadow-green-100 active:scale-95"
                     >
                       <MessageCircle size={18} />
                       Commander via WhatsApp
-                    </a>
+                    </button>
                     <button className="w-full bg-slate-50 text-slate-600 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-100 transition-all active:scale-95 text-sm">
                       Détails du produit
                     </button>
@@ -634,6 +813,12 @@ const ProductsSection = () => {
           </p>
         </div>
       </div>
+
+      <ProductModal 
+        product={selectedProduct} 
+        isOpen={isModalOpen} 
+        onClose={handleCloseModal} 
+      />
     </section>
   );
 };
@@ -984,9 +1169,18 @@ const FinalCTA = () => {
                   >
                     <CheckCircle2 size={40} className="text-green-400 mx-auto mb-4" />
                     <h3 className="text-2xl font-bold mb-2">Sent Successfully!</h3>
-                    <p className="text-slate-400">
+                    <p className="text-slate-400 mb-6">
                       We&apos;ve sent the guide to <span className="text-white font-bold">{email}</span>. Check your inbox to begin.
                     </p>
+                    <a 
+                      href="https://lifebeyonddialysis.com/files/kidney-transplant-guide.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all shadow-lg"
+                    >
+                      <Download size={18} />
+                      Download PDF Now
+                    </a>
                   </motion.div>
                 )}
               </AnimatePresence>
