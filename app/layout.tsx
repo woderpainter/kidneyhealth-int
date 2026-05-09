@@ -1,6 +1,8 @@
 import type {Metadata} from 'next';
 import { Inter, Cormorant_Garamond } from 'next/font/google';
 import './globals.css';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
+import { Suspense } from 'react';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -22,6 +24,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
       <body suppressHydrationWarning className="font-sans antialiased text-slate-900 bg-white">
+        <Suspense fallback={null}>
+          <GoogleAnalytics />
+        </Suspense>
         {children}
       </body>
     </html>

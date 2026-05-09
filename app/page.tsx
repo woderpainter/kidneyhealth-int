@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import { GoogleGenAI } from "@google/genai";
+import * as ga from '@/components/GoogleAnalytics';
 import { 
   ShieldCheck, 
   Download, 
@@ -261,6 +262,11 @@ const Hero = () => {
 
       if (response.ok) {
         setIsSubmitted(true);
+        ga.event({
+          action: 'submit_form',
+          category: 'engagement',
+          label: 'Hero Email Form',
+        });
       } else {
         console.error('Failed to send email:', data.error);
         setError(data.error || 'Failed to send email. Please try again.');
@@ -642,6 +648,11 @@ const SolutionSection = () => {
               href="https://lifebeyonddialysis.com/files/kidney-transplant-guide.pdf"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => ga.event({
+                action: 'click_download',
+                category: 'conversion',
+                label: 'Solution Section Guide',
+              })}
               className="inline-block w-full sm:w-auto bg-blue-600 text-white px-10 py-5 rounded-2xl text-xl font-bold hover:bg-blue-700 transition-all shadow-2xl shadow-blue-200 active:scale-95 text-center"
             >
               Download the Guide - $27
@@ -1189,6 +1200,11 @@ const FinalCTA = () => {
 
       if (response.ok) {
         setIsSubmitted(true);
+        ga.event({
+          action: 'submit_form',
+          category: 'engagement',
+          label: 'Final CTA Email Form',
+        });
       } else {
         console.error('Failed to send email:', data.error);
         setError(data.error || 'Failed to send email. Please try again.');
